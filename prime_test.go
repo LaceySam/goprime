@@ -22,6 +22,9 @@ func init() {
 }
 
 // Tests
+
+// TestGenerateRandomNumberWithinBitRange tests if the generated number is within the required bit
+// range
 func TestGenerateRandomNumberWithinBitRange(t *testing.T) {
 	n, ok := testP.GenerateRandomNumber()
 	if !ok {
@@ -38,6 +41,7 @@ func TestGenerateRandomNumberWithinBitRange(t *testing.T) {
 	}
 }
 
+// TestProvePrimailtyWithPrime determines the code knows that a known prime is a prime
 func TestProvePrimalityWithPrime(t *testing.T) {
 	pass := testP.ProvePrimality(knownBigPrime)
 	if !pass {
@@ -45,13 +49,16 @@ func TestProvePrimalityWithPrime(t *testing.T) {
 	}
 }
 
-func TestProvePrimalityWithNotPrime(t *testing.T) {
+// TestProvePrimailityWithNonPrime determines if the code can tell if a known non-prime is a
+// non-prime
+func TestProvePrimalityWithNonPrime(t *testing.T) {
 	pass := testP.ProvePrimality(knownNotBigPrime)
 	if pass {
 		t.Fatal("Known non-prime proved to be prime")
 	}
 }
 
+// TestPrimeActuallyGenerated determines if the system actually produces prime numbers
 func TestPrimeActuallyGenerated(t *testing.T) {
 	p, ok := testP.GetPrime()
 	if !ok {
@@ -65,24 +72,30 @@ func TestPrimeActuallyGenerated(t *testing.T) {
 }
 
 // Benchmarks
+
+// BenchmarkGetPrime benchmarks the overall prime generation process in all of its glory
 func BenchmarkGetPrime(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		testP.GetPrime()
 	}
 }
 
+// BenchmarkGenerateRandonNumber benchmarks the large random number generation
 func BenchmarkGenerateRandomNumber(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		testP.GenerateRandomNumber()
 	}
 }
 
+// BenchmarkCheckAgainstSmallPrimes benchmarks the initial less expensive check against small known
+// primes, with a prime
 func BenchmarkCheckAgainstSmallPrimes(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		testP.checkAgainstSmallPrimes(knownBigPrime)
 	}
 }
 
+// BenchmarkPrimailityTest benchmarks the whole primaility testing process
 func BenchmarkPrimailityTest(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		testP.ProvePrimality(knownBigPrime)

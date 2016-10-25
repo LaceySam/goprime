@@ -11,6 +11,7 @@ const (
 	minimumPrimeAccuracy = 100
 )
 
+// PrimeGenerator generates random large primes
 type PrimeGenerator struct {
 	Bits              int
 	PrimeAccuracy     int
@@ -19,6 +20,7 @@ type PrimeGenerator struct {
 	preComputedPrimes []*big.Int
 }
 
+// NewPrimeGenerator returns a PrimeGenerator with atleast the default fields
 func NewPrimeGenerator(bits, primeAccuracy int, source rand.Source) *PrimeGenerator {
 	if bits == 0 || bits < minimumBits {
 		bits = minimumBits
@@ -47,6 +49,7 @@ func NewPrimeGenerator(bits, primeAccuracy int, source rand.Source) *PrimeGenera
 	}
 }
 
+// GetPrime generates a new large prime of n bits
 func (p *PrimeGenerator) GetPrime() (*big.Int, bool) {
 
 	// We're going to need to keep generating random numbers until we prove one is a prime.
@@ -66,6 +69,7 @@ func (p *PrimeGenerator) GetPrime() (*big.Int, bool) {
 	return prime, true
 }
 
+// GenerateRandomNumber generates a random number of n bits
 func (p *PrimeGenerator) GenerateRandomNumber() (*big.Int, bool) {
 	// We're going to go through a binary sequence and randomly turn the bits on and off.
 	// First bit is always on to ensure we get a random number of: 2^(b-1) <= x <= 2^b where b is
@@ -86,6 +90,8 @@ func (p *PrimeGenerator) GenerateRandomNumber() (*big.Int, bool) {
 	return randomNumber.SetString(binarySequence, 2)
 }
 
+// checkAgainstSmallPrimes checks the mod of the candidate against the first 1k primes
+// In many cases this weeds out easily proven non primes before the more expensive test
 func (p *PrimeGenerator) checkAgainstSmallPrimes(candidate *big.Int) bool {
 	zero := big.NewInt(0)
 	mod := new(big.Int)
@@ -99,6 +105,7 @@ func (p *PrimeGenerator) checkAgainstSmallPrimes(candidate *big.Int) bool {
 	return true
 }
 
+// ProvePrimality will attempt to prove if a given number is a prime. It has a level of innacuracy
 func (p *PrimeGenerator) ProvePrimality(candidate *big.Int) bool {
 	if !p.checkAgainstSmallPrimes(candidate) {
 		return false
