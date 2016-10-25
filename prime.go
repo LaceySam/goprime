@@ -56,7 +56,7 @@ func (p *PrimeGenerator) GetPrime() (*big.Int, bool) {
 		return &big.Int{}, ok
 	}
 
-	for p.ProvePrimality(prime) {
+	for !p.ProvePrimality(prime) {
 		prime, ok = p.GenerateRandomNumber()
 		if !ok {
 			return &big.Int{}, ok
@@ -87,9 +87,11 @@ func (p *PrimeGenerator) GenerateRandomNumber() (*big.Int, bool) {
 }
 
 func (p *PrimeGenerator) checkAgainstSmallPrimes(candidate *big.Int) bool {
+	zero := big.NewInt(0)
+	mod := new(big.Int)
+
 	for _, prime := range p.preComputedPrimes {
-		mod := new(big.Int)
-		if mod.Mod(candidate, prime) == big.NewInt(0) {
+		if mod.Mod(candidate, prime) == zero {
 			return false
 		}
 	}

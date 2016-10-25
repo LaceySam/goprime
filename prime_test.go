@@ -21,6 +21,7 @@ func init() {
 	knownNotBigPrime.Mul(knownBigPrime, big.NewInt(2))
 }
 
+// Tests
 func TestGenerateRandomNumberWithinBitRange(t *testing.T) {
 	n, ok := testP.GenerateRandomNumber()
 	if !ok {
@@ -48,5 +49,42 @@ func TestProvePrimalityWithNotPrime(t *testing.T) {
 	pass := testP.ProvePrimality(knownNotBigPrime)
 	if pass {
 		t.Fatal("Known non-prime proved to be prime")
+	}
+}
+
+func TestPrimeActuallyGenerated(t *testing.T) {
+	p, ok := testP.GetPrime()
+	if !ok {
+		t.Fatal("Error encountered when generating random prime")
+	}
+
+	ok = p.ProbablyPrime(testP.PrimeAccuracy)
+	if !ok {
+		t.Fatal("Returned a non-prime number")
+	}
+}
+
+// Benchmarks
+func BenchmarkGetPrime(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		testP.GetPrime()
+	}
+}
+
+func BenchmarkGenerateRandomNumber(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		testP.GenerateRandomNumber()
+	}
+}
+
+func BenchmarkCheckAgainstSmallPrimes(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		testP.checkAgainstSmallPrimes(knownBigPrime)
+	}
+}
+
+func BenchmarkPrimailityTest(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		testP.ProvePrimality(knownBigPrime)
 	}
 }
