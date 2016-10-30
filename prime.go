@@ -20,6 +20,16 @@ type PrimeGenerator struct {
 	preComputedPrimes []*big.Int
 }
 
+// GetPreComputedPrimes returns an array of the first 1000 primes as []*big.Int
+func GetPreComputedPrimes() []*big.Int {
+	biggedPreComputedPrimes := []*big.Int{}
+	for _, prime := range preComputedPrimes {
+		biggedPreComputedPrimes = append(biggedPreComputedPrimes, big.NewInt(prime))
+	}
+
+	return biggedPreComputedPrimes
+}
+
 // NewPrimeGenerator returns a PrimeGenerator with atleast the default fields
 func NewPrimeGenerator(bits, primeAccuracy int, source rand.Source) *PrimeGenerator {
 	if bits == 0 || bits < minimumBits {
@@ -35,10 +45,7 @@ func NewPrimeGenerator(bits, primeAccuracy int, source rand.Source) *PrimeGenera
 		source = rand.NewSource(time.Now().UnixNano())
 	}
 
-	biggedPreComputedPrimes := []*big.Int{}
-	for _, prime := range preComputedPrimes {
-		biggedPreComputedPrimes = append(biggedPreComputedPrimes, big.NewInt(prime))
-	}
+	biggedPreComputedPrimes := GetPreComputedPrimes()
 
 	return &PrimeGenerator{
 		Bits:              bits,
